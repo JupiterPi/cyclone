@@ -1,32 +1,38 @@
+import 'package:cyclone/state.dart';
 import 'package:emojis/emojis.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'cyclone_ui.dart';
 
 class EnterWeightDialog extends StatefulWidget {
-  const EnterWeightDialog({super.key});
+  const EnterWeightDialog({super.key, required this.initialWeight});
+
+  final double initialWeight;
 
   @override
   State createState() => _EnterWeightDialogState();
 }
 
 class _EnterWeightDialogState extends State<EnterWeightDialog> {
-  double _weight = 77;
+  double _weightDelta = 0.0;
 
   void _increaseWeight() => setState(() {
-    _weight += 0.1;
+    _weightDelta += 0.1;
   });
 
   void _decreaseWeight() => setState(() {
-    _weight -= 0.1;
+    _weightDelta -= 0.1;
   });
 
-  double get _weightDelta => _weight - 77;
+  double get _effectiveWeight => widget.initialWeight + _weightDelta;
 
   @override
   Widget build(BuildContext context) {
     return CycloneOkDialog(
       onOkPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Set today's weight: ${_weight.toStringAsFixed(1)} kg"), duration: const Duration(seconds: 1),));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Set today's weight: ${_effectiveWeight.toStringAsFixed(1)} kg"), duration: const Duration(seconds: 1),));
+        Provider.of<AppState>(context, listen: false).setWeight(_effectiveWeight);
         if (_weightDelta < 0) {
           showDialog(context: context, builder: (context) => const ShowBadgeDialog());
         }
@@ -34,7 +40,7 @@ class _EnterWeightDialogState extends State<EnterWeightDialog> {
       children: [
         const Text("Please enter your weight:"),
         Text(
-          "${_weight.toStringAsFixed(1)} kg",
+          "${_effectiveWeight.toStringAsFixed(1)} kg",
           style: const TextStyle(fontSize: 50),
         ),
         if(_weightDelta != 0) Column(
