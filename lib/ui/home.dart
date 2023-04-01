@@ -1,4 +1,5 @@
 import 'package:cyclone/state.dart';
+import 'package:cyclone/ui/cyclone_ui.dart';
 import 'package:cyclone/ui/enter_weight.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,8 +29,8 @@ class HomePage extends StatelessWidget {
                 ),
                 child: InkWell(
                   onTap: () {
-                    var weight = Provider.of<AppState>(context, listen: false).absoluteWeight;
-                    showDialog(context: context, builder: (context) => EnterWeightDialog(initialWeight: weight,));
+                    var currentWeight = Provider.of<AppState>(context, listen: false).currentWeight;
+                    showDialog(context: context, builder: (context) => EnterWeightDialog(initialWeight: currentWeight,));
                   },
                   borderRadius: BorderRadius.circular(15),
                   child: Row(
@@ -43,42 +44,42 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              width: double.infinity,
-              child: Card(
-                  margin: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)
-                  ),
-                  child: InkWell(
-                    onTap: () {},
-                    splashColor: Theme.of(context).colorScheme.primary.withAlpha(25),
-                    borderRadius: BorderRadius.circular(15),
-                    child: Padding(
-                      padding: const EdgeInsets.all(25),
-                      child: Consumer<AppState>(
-                          builder: (context, state, child) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  (state.relativeWeight > 0 ? "You've gained weight:" : (state.relativeWeight < 0 ? "You've lost weight!" : "Your weight hasn't changed")),
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                                if (state.relativeWeight != 0) Text(
-                                  "${state.relativeWeight > 0 ? "+" : "-"} ${state.relativeWeight.abs().toStringAsFixed(1)} kg",
-                                  style: GoogleFonts.crimsonText(fontSize: 70),
-                                ),
-                                const Text(
-                                  "compared to last cycle.",
-                                  style: TextStyle(fontSize: 20),
-                                )
-                              ],
-                            );
-                          }
+            CycloneCard(
+              child: Consumer<AppState>(
+                builder: (context, state, child) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (state.lastCycleWeightDifference > 0 ? "You've gained weight:" : (state.lastCycleWeightDifference < 0 ? "You've lost weight!" : "Your weight hasn't changed")),
+                        style: const TextStyle(fontSize: 20),
                       ),
-                    ),
-                  )
+                      if (state.lastCycleWeightDifference != 0) Text(
+                        "${state.lastCycleWeightDifference > 0 ? "+" : "-"} ${state.lastCycleWeightDifference.abs().toStringAsFixed(1)} kg",
+                        style: GoogleFonts.crimsonText(fontSize: 70),
+                      ),
+                      const Text(
+                        "compared to last cycle.",
+                        style: TextStyle(fontSize: 20),
+                      )
+                    ],
+                  );
+                }
+              ),
+            ),
+            const SizedBox(height: 8),
+            CycloneCard(
+              child: Consumer<AppState>(
+                builder: (context, state, child) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Start weight: ${state.startWeight}"),
+                    Text("Last cycle's weight: ${state.lastCycleWeight}"),
+                    Text("Current weight: ${state.currentWeight}"),
+                    Text("Difference between last cycle's and current weight: ${state.lastCycleWeightDifference}"),
+                    Text("The weight ${state.weightSetToday ? "was" : "wasn't"} set today."),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 8),

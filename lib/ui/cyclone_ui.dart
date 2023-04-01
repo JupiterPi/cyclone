@@ -1,5 +1,34 @@
 import 'package:flutter/material.dart';
 
+class CycloneCard extends StatelessWidget {
+  const CycloneCard({super.key, required this.child, this.onTap});
+
+  final Widget child;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15)
+        ),
+        child: InkWell(
+          onTap: () { onTap?.call(); },
+          splashColor: Theme.of(context).colorScheme.primary.withAlpha(25),
+          borderRadius: BorderRadius.circular(15),
+          child: Padding(
+            padding: const EdgeInsets.all(25),
+            child: child
+          ),
+        )
+      ),
+    );
+  }
+}
+
 class CycloneDialog extends StatelessWidget {
   const CycloneDialog({super.key, required this.children});
 
