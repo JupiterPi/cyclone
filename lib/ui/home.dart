@@ -28,17 +28,28 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 15),
               const BaseValuesCard(),
               const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening dashboard..."), duration: Duration(seconds: 1),));
-                },
-                child: const Text("Dashboard"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening calendar view..."), duration: Duration(seconds: 1)));
-                },
-                child: const Text("Calendar View"),
+              Wrap(
+                spacing: 10,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening dashboard..."), duration: Duration(seconds: 1),));
+                    },
+                    child: const Text("Dashboard"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening calendar view..."), duration: Duration(seconds: 1)));
+                    },
+                    child: const Text("Calendar"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening measurements view..."), duration: Duration(seconds: 1)));
+                    },
+                    child: const Text("Measurements"),
+                  ),
+                ],
               ),
 
               // for debugging
