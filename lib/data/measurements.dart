@@ -1,4 +1,3 @@
-import 'package:cyclone/data/measurements.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Measurement {
@@ -39,42 +38,17 @@ class Measurement {
   String toString() => "Measurement{id: $id, date: $date, weight: $weight}";
 }
 
-abstract class MeasurementsService {
-  Future<void> insertMeasurement(Measurement measurement);
-  Future<List<Measurement>> findMeasurements();
-  Future<void> deleteMeasurements();
-}
+class MeasurementsService {
+  MeasurementsService(this._database);
 
-class MeasurementsServiceImpl extends MeasurementsService {
-  MeasurementsServiceImpl(this._database);
+  final Future<Database> _database;
 
-  final Database _database;
+  Future<void> insertMeasurement(Measurement measurement) async
+  => (await _database).insert("measurements", measurement.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
 
-  @override
-  Future<void> insertMeasurement(Measurement measurement) async {
-    _database.insert("measurements", measurement.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-  }
+  Future<List<Measurement>> findMeasurements() async
+  => (await (await _database).query("measurements")).map((map) => Measurement.fromMap(map)).toList();
 
-  @override
-  Future<List<Measurement>> findMeasurements() async {
-    var measurements = (await _database.query("measurements")).map((map) => Measurement.fromMap(map)).toList();
-    print(measurements);
-    return measurements;
-  }
-
-  @override
-  Future<void> deleteMeasurements() async {
-    _database.delete("measurements");
-  }
-}
-
-class MeasurementsServiceEmpty extends MeasurementsService {
-  @override
-  Future<void> insertMeasurement(Measurement measurement) async {}
-
-  @override
-  Future<List<Measurement>> findMeasurements() async => [];
-
-  @override
-  Future<void> deleteMeasurements() async {}
+  Future<void> deleteMeasurements() async
+  => (await _database).delete("measurements");
 }

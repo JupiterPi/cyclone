@@ -45,7 +45,7 @@ class CycloneScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "Cyclone",
+            "Fluctuweight",
             style: GoogleFonts.crimsonText(fontSize: 28)
         ),
       ),

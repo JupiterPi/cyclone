@@ -15,21 +15,14 @@ void main() async {
 
   final path = join(await getDatabasesPath(), "cyclone.db");
   //await deleteDatabase(path);
-  openDatabase(
+  final db = openDatabase(
     path,
     version: 1,
     onCreate: (db, version) async {
       await Measurement.createTable(db);
     },
-    onOpen: (db) {
-      print("loaded database");
-      getIt.unregister<MeasurementsService>();
-      getIt.registerLazySingleton<MeasurementsService>(() => MeasurementsServiceImpl(db));
-    },
-  ).then((value) => print("loaded database 2"));
-  print("opending db");
-
-  getIt.registerLazySingleton<MeasurementsService>(() => MeasurementsServiceEmpty());
+  );
+  getIt.registerLazySingleton<MeasurementsService>(() => MeasurementsService(db));
 
   runApp(
     ChangeNotifierProvider(

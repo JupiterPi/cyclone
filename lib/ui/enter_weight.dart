@@ -1,6 +1,7 @@
 import 'package:cyclone/state.dart';
 import 'package:emojis/emojis.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'cyclone_ui.dart';
@@ -32,8 +33,10 @@ class _EnterWeightDialogState extends State<EnterWeightDialog> {
     return CycloneOkDialog(
       onOkPressed: () {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Set today's weight: ${_effectiveWeight.toStringAsFixed(1)} kg"), duration: const Duration(seconds: 1),));
-        Provider.of<AppState>(context, listen: false).setWeight(_effectiveWeight);
-        if (_weightDelta < 0) {
+
+        final state = Provider.of<AppState>(context, listen: false);
+        state.setWeight(_effectiveWeight);
+        if (_effectiveWeight < state.startWeight - 0.2) {
           showDialog(context: context, builder: (context) => const ShowBadgeDialog());
         }
       },

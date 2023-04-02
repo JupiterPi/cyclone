@@ -2,6 +2,7 @@ import 'package:cyclone/data/measurements.dart';
 import 'package:cyclone/state.dart';
 import 'package:cyclone/ui/cyclone_ui.dart';
 import 'package:cyclone/ui/enter_weight.dart';
+import 'package:cyclone/util.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,7 +57,7 @@ class HomePage extends StatelessWidget {
                         future: GetIt.instance.get<MeasurementsService>().findMeasurements(),
                         builder: (context, snapshot) => Column(
                           children: snapshot.hasData
-                              ? [Measurement(date: DateTime.now(), weight: 0), ...snapshot.data!].map((measurement) => Text(measurement.toString())).toList()
+                              ? snapshot.data!.map((measurement) => Text(measurement.toString())).toList()
                               : [ const Text("No data...") ]
                         ),
                       ),
