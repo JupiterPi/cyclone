@@ -1,8 +1,6 @@
-import 'package:cyclone/data/measurements.dart';
 import 'package:cyclone/state.dart';
 import 'package:cyclone/ui/cyclone_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 

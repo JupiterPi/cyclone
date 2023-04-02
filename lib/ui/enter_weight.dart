@@ -1,7 +1,7 @@
 import 'package:cyclone/state.dart';
+import 'package:cyclone/util.dart';
 import 'package:emojis/emojis.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'cyclone_ui.dart';
@@ -18,12 +18,13 @@ class EnterWeightDialog extends StatefulWidget {
 class _EnterWeightDialogState extends State<EnterWeightDialog> {
   double _weightDelta = 0.0;
 
-  void _increaseWeight() => setState(() {
-    _weightDelta += 0.1;
+  void _addWeight(double weight) => setState(() {
+    _weightDelta += weight;
+    if (_effectiveWeight < 0) _weightDelta = -widget.initialWeight;
   });
 
-  void _decreaseWeight() => setState(() {
-    _weightDelta -= 0.1;
+  void _setWeight(double weight) => setState(() {
+    _weightDelta = weight;
   });
 
   double get _effectiveWeight => widget.initialWeight + _weightDelta;
@@ -43,33 +44,51 @@ class _EnterWeightDialogState extends State<EnterWeightDialog> {
       children: [
         const Text("Please enter your weight:"),
         Text(
-          "${_effectiveWeight.toStringAsFixed(1)} kg",
+          formatWeightAbsolute(_effectiveWeight),
           style: const TextStyle(fontSize: 50),
         ),
-        if(_weightDelta != 0) Column(
-          children: [
-            Text(
-              "${_weightDelta > 0 ? "+" : "-"} ${_weightDelta.abs().toStringAsFixed(1)} kg",
-            ),
-            const SizedBox(height: 15,),
-          ],
+        if(_weightDelta.toPrecision(1) != 0 && widget.initialWeight != 0) Padding(
+          padding: const EdgeInsets.only(bottom: 15),
+          child: Text(formatWeightRelative(_weightDelta)),
+        ),
+        if (widget.initialWeight == 0) Slider(
+          value: _weightDelta,
+          onChanged: (valueChanged) {
+            _setWeight(valueChanged);
+          },
+          min: 0,
+          max: 130,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-                height: 60,
-                width: 60,
-                child: ElevatedButton(onPressed: _decreaseWeight, child: const Text("-"))
+                height: 46,
+                width: 46,
+                child: ElevatedButton(onPressed: () { _addWeight(-1); }, child: const Text("-1"))
             ),
             const SizedBox(width: 10,),
             SizedBox(
                 height: 60,
                 width: 60,
-                child: ElevatedButton(onPressed: _increaseWeight, child: const Text("+"))
+                child: ElevatedButton(onPressed: () { _addWeight(-0.1); }, child: const Text("-"))
+            ),
+            const SizedBox(width: 10,),
+            SizedBox(
+                height: 60,
+                width: 60,
+                child: ElevatedButton(onPressed: () { _addWeight(0.1); }, child: const Text("+"))
+            ),
+            const SizedBox(width: 10,),
+            SizedBox(
+                height: 46,
+                width: 46,
+                child: ElevatedButton(onPressed: () { _addWeight(1); }, child: const Text("+1"))
             ),
           ],
         ),
+        const SizedBox(height: 5,),
       ],
     );
   }
