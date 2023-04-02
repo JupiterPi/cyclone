@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class AppState extends ChangeNotifier {
-  MeasurementsService get _measurements => GetIt.instance.get<MeasurementsService>();
+  MeasurementsService get _measurementsService => GetIt.instance.get<MeasurementsService>();
 
   AppState() {
     _readStateFromMeasurements();
   }
 
   // state
+
+  List<Measurement>? _measurements;
 
   double? _startWeight;
   double? _lastCycleWeight;
@@ -19,18 +21,21 @@ class AppState extends ChangeNotifier {
   bool? _weightSetToday;
 
   Future<void> _readStateFromMeasurements() async {
-    final measurements = await _measurements.findMeasurements();
+    final measurements = await _measurementsService.findMeasurements();
+    _measurements = measurements;
 
-    _startWeight = measurements.first.weight;
-    _lastCycleWeight = measurements[measurements.length - 2].weight;
-    _currentWeight = measurements.last.weight;
+    _startWeight = measurements.isEmpty ? 0 : measurements.first.weight;
+    _lastCycleWeight = measurements.length >= 2 ? measurements[measurements.length - 2].weight : 0;
+    _currentWeight = measurements.isEmpty ? 0 : measurements.last.weight;
 
-    _weightSetToday = measurements.last.date.isSameDate(DateTime.now());
+    _weightSetToday = measurements.isEmpty ? false : measurements.last.date.isSameDate(DateTime.now());
 
     notifyListeners();
   }
 
   // state read
+
+  List<Measurement> get measurements => _measurements ?? [];
 
   double get startWeight => _startWeight ?? 0;
   double get lastCycleWeight => _lastCycleWeight ?? 0;
@@ -40,8 +45,8 @@ class AppState extends ChangeNotifier {
 
   // state write
 
-  void setWeight(double weight) async {
-    await _measurements.insertMeasurement(
+  Future<void> setWeight(double weight) async {
+    await _measurementsService.insertMeasurement(
         Measurement(date: DateTime.now(), weight: weight.toPrecision(1))
     );
     await _readStateFromMeasurements();
@@ -50,5 +55,10 @@ class AppState extends ChangeNotifier {
   void resetWeightSetToday() {
     _weightSetToday = false;
     notifyListeners();
+  }
+
+  Future<void> clear() async {
+    await _measurementsService.deleteMeasurements();
+    await _readStateFromMeasurements();
   }
 }

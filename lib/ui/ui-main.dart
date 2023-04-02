@@ -1,4 +1,5 @@
 import 'package:cyclone/ui/home.dart';
+import 'package:cyclone/ui/measurements_list.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,6 +31,7 @@ final _router = GoRouter(
           builder: (context, state, child) => CycloneScaffold(body: child),
           routes: [
             GoRoute(path: "/", builder: (context, state) => const HomePage()),
+            GoRoute(path: "/measurements", builder: (context, state) => const MeasurementsListPage()),
           ]
       )
     ]

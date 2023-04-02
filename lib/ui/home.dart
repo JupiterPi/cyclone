@@ -5,6 +5,7 @@ import 'package:cyclone/ui/enter_weight.dart';
 import 'package:cyclone/util.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,7 @@ class HomePage extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening measurements view..."), duration: Duration(seconds: 1)));
+                      context.go("/measurements");
                     },
                     child: const Text("Measurements"),
                   ),
