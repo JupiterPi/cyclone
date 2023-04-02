@@ -1,4 +1,6 @@
+import 'package:cyclone/data/measurements.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class AppState extends ChangeNotifier {
   // state
@@ -14,8 +16,6 @@ class AppState extends ChangeNotifier {
   double get lastCycleWeight => _lastCycleWeight;
   double get currentWeight => _currentWeight;
 
-  double get lastCycleWeightDifference => (currentWeight - lastCycleWeight).toPrecision(1);
-
   bool get weightSetToday => _weightSetToday;
 
   // state write
@@ -24,6 +24,10 @@ class AppState extends ChangeNotifier {
     _currentWeight = weight.toPrecision(1);
     _weightSetToday = true;
     notifyListeners();
+
+    GetIt.instance.get<MeasurementsService>().insertMeasurement(
+      Measurement(date: DateTime.now(), weight: weight)
+    );
   }
 
   void resetWeightSetToday() {

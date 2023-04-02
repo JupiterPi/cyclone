@@ -74,3 +74,6 @@ class CycloneOkDialog extends StatelessWidget {
     );
   }
 }
+
+String formatWeightAbsolute(double weight) => "${weight.toStringAsFixed(1)} kg";
+String formatWeightRelative(double weight) => "${weight > 0 ? "+" : "-"} ${weight.abs().toStringAsFixed(1)} kg";
