@@ -21,3 +21,8 @@ extension DateOnlyCompare on DateTime {
         && day == other.day;
   }
 }
+
+// custom
+int interpolate(int start, int end, double percent) {
+  return ( start + (end-start) * percent ).round();
+}

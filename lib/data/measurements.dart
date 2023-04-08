@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Measurement {
@@ -38,17 +40,52 @@ class Measurement {
   String toString() => "Measurement{id: $id, date: $date, weight: $weight}";
 }
 
-class MeasurementsService {
-  MeasurementsService(this._database);
+abstract class MeasurementsService {
+  Future<void> insertMeasurement(Measurement measurement);
+  Future<List<Measurement>> findMeasurements();
+  Future<void> deleteMeasurements();
+}
+
+class MeasurementsServiceImpl extends MeasurementsService {
+  MeasurementsServiceImpl(this._database);
 
   final Future<Database> _database;
 
+  @override
   Future<void> insertMeasurement(Measurement measurement) async
   => (await _database).insert("measurements", measurement.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
 
+  @override
   Future<List<Measurement>> findMeasurements() async
   => (await (await _database).query("measurements")).map((map) => Measurement.fromMap(map)).toList();
 
+  @override
   Future<void> deleteMeasurements() async
   => (await _database).delete("measurements");
+}
+
+class MeasurementsServiceMock extends MeasurementsService {
+  @override
+  Future<void> insertMeasurement(Measurement measurement) async {}
+
+  @override
+  Future<List<Measurement>> findMeasurements() async {
+    var data = await rootBundle.loadString("mock_data/mock_measurements.csv");
+    data = data.replaceAll("(\r\n|\r|\n)", "\n");
+
+    var i = 1;
+    return data
+        .split("\n")
+        .where((line) => line.isNotEmpty)
+        .map((line) => line.split(","))
+        .map((parts) => Measurement(
+          id: i++,
+          date: DateFormat("dd/MM/yyyy").parse(parts[0]),
+          weight: double.parse(parts[1]),
+        ))
+        .toList();
+  }
+
+  @override
+  Future<void> deleteMeasurements() async {}
 }

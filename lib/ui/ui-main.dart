@@ -1,3 +1,4 @@
+import 'package:cyclone/ui/chart.dart';
 import 'package:cyclone/ui/home.dart';
 import 'package:cyclone/ui/measurements_list.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ final _router = GoRouter(
           routes: [
             GoRoute(path: "/", builder: (context, state) => const HomePage()),
             GoRoute(path: "/measurements", builder: (context, state) => const MeasurementsListPage()),
+            GoRoute(path: "/chart", builder: (context, state) => const ChartPage()),
           ]
       )
     ]

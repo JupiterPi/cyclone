@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
               Wrap(
                 spacing: 10,
                 children: [
-                  ElevatedButton(
+                  /*ElevatedButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening dashboard..."), duration: Duration(seconds: 1),));
                     },
@@ -43,12 +43,18 @@ class HomePage extends StatelessWidget {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening calendar view..."), duration: Duration(seconds: 1)));
                     },
                     child: const Text("Calendar"),
-                  ),
+                  ),*/
                   ElevatedButton(
                     onPressed: () {
                       context.go("/measurements");
                     },
                     child: const Text("Measurements"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.go("/chart");
+                    },
+                    child: const Text("Chart"),
                   ),
                 ],
               ),

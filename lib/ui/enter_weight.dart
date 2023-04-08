@@ -16,11 +16,14 @@ class EnterWeightDialog extends StatefulWidget {
 }
 
 class _EnterWeightDialogState extends State<EnterWeightDialog> {
+  static const _weightMax = 130;
+
   double _weightDelta = 0.0;
 
   void _addWeight(double weight) => setState(() {
     _weightDelta += weight;
     if (_effectiveWeight < 0) _weightDelta = -widget.initialWeight;
+    if (_effectiveWeight > _weightMax) _weightDelta = _weightMax - widget.initialWeight;
   });
 
   void _setWeight(double weight) => setState(() {

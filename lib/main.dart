@@ -22,7 +22,7 @@ void main() async {
       await Measurement.createTable(db);
     },
   );
-  getIt.registerLazySingleton<MeasurementsService>(() => MeasurementsService(db));
+  getIt.registerLazySingleton<MeasurementsService>(() => MeasurementsServiceMock());
 
   runApp(
     ChangeNotifierProvider(
