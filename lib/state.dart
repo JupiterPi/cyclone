@@ -28,7 +28,7 @@ class AppState extends ChangeNotifier {
     _lastCycleWeight = measurements.length >= 2 ? measurements[measurements.length - 2].weight : 0;
     _currentWeight = measurements.isEmpty ? 0 : measurements.last.weight;
 
-    _weightSetToday = measurements.isEmpty ? false : measurements.last.date.isSameDate(DateTime.now());
+    _weightSetToday = measurements.isEmpty ? false : measurements.last.date == Date.current();
 
     notifyListeners();
   }
@@ -47,7 +47,7 @@ class AppState extends ChangeNotifier {
 
   Future<void> setWeight(double weight) async {
     await _measurementsService.insertMeasurement(
-        Measurement(date: DateTime.now(), weight: weight.toPrecision(1))
+        Measurement(date: Date.current(), weight: weight.toPrecision(1))
     );
     await _readStateFromMeasurements();
   }

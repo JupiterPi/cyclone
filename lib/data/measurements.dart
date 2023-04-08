@@ -1,10 +1,10 @@
+import 'package:cyclone/util.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Measurement {
   final int? id;
-  final DateTime date;
+  final Date date;
   final double weight;
 
   const Measurement({
@@ -25,12 +25,12 @@ class Measurement {
 
   Measurement.fromMap(Map<String, dynamic> map)
       : id = map["id"],
-        date = DateTime.parse(map["date"]),
+        date = Date.parse(map["date"]),
         weight = map["weight"];
 
   Map<String, dynamic> toMap() => {
     "id": id,
-    "date": date.toIso8601String(),
+    "date": date.toString(),
     "weight": weight.toStringAsFixed(1),
   };
 
@@ -80,7 +80,7 @@ class MeasurementsServiceMock extends MeasurementsService {
         .map((line) => line.split(","))
         .map((parts) => Measurement(
           id: i++,
-          date: DateFormat("dd/MM/yyyy").parse(parts[0]),
+          date: Date.parse(parts[0]),
           weight: double.parse(parts[1]),
         ))
         .toList();
