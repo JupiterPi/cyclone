@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:intl/intl.dart';
 
 extension Round on double {
@@ -36,6 +37,10 @@ class Date {
   Date.current() : this.fromDateTime(DateTime.now());
 
   Date addDays(int days) => Date.fromDateTime(DateTime(year, month, day).add(Duration(days: days)));
+
+  int toDoubleForComparison() => toDateTime().millisecondsSinceEpoch;
+
+  DateTime toDateTime() => DateTime(year, month, day);
 
   @override
   String toString() => "${day.formatAsLength(2)}/${month.formatAsLength(2)}/$year";

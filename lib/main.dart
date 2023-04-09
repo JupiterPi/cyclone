@@ -1,4 +1,5 @@
 import 'package:cyclone/data/measurements.dart';
+import 'package:cyclone/data/weights.dart';
 import 'package:cyclone/state.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -23,6 +24,8 @@ void main() async {
     },
   );
   getIt.registerLazySingleton<MeasurementsService>(() => MeasurementsServiceMock());
+
+  getIt.registerLazySingleton<WeightsService>(() => WeightsServiceImpl());
 
   runApp(
     ChangeNotifierProvider(

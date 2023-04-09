@@ -1,32 +1,20 @@
 import 'package:charts_painter/chart.dart';
+import 'package:cyclone/data/weights.dart';
 import 'package:cyclone/main.dart';
 import 'package:cyclone/ui/cyclone_ui.dart';
 import 'package:cyclone/util.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../data/measurements.dart';
-
 class ChartPage extends StatelessWidget {
   const ChartPage({super.key});
 
-  static Future<List<Measurement>> _getMeasurements(Date startDate, int days) async {
-    final measurements = await getIt.get<MeasurementsService>().findMeasurements();
-    var resultingMeasurements = <Measurement>[];
-    for (int daysDifference = 0; daysDifference < days; daysDifference++) {
-      final date = startDate.addDays(daysDifference);
-      final matches = measurements.where((measurement) => measurement.date == date).toList();
-      if (matches.isNotEmpty) resultingMeasurements.add(matches[0]);
-    }
-    return resultingMeasurements;
-  }
-
-  static Future<List<List<Measurement>>> _getMultipleMeasurements(List<Date> startDates, int days) async {
-    var measurements = <List<Measurement>>[];
+  static Future<List<List<Weight>>> _getMultipleWeights(List<Date> startDates, int days) async {
+    var weights = <List<Weight>>[];
     for (var startDate in startDates) {
-      measurements.add(await _getMeasurements(startDate, days));
+      weights.add(await getIt.get<WeightsService>().getWeights(startDate, days));
     }
-    return measurements;
+    return weights;
   }
 
   @override
@@ -36,7 +24,7 @@ class ChartPage extends StatelessWidget {
         child: Column(
           children: [
             FutureBuilder(
-                future: _getMultipleMeasurements([
+                future: _getMultipleWeights([
                   const Date(year: 2023, month: 02, day: 01),
                   const Date(year: 2023, month: 03, day: 01),
                   const Date(year: 2023, month: 04, day: 01),
@@ -48,9 +36,8 @@ class ChartPage extends StatelessWidget {
 
                   } else {
 
-                    final measurements = snapshot.data!;
-                    final data = measurements.map((list) => list.map((e) => e.weight).toList()).toList();
-                    return ChartCard(data: data, daysStep: 5);
+                    final weights = snapshot.data!;
+                    return ChartCard(data: weights, daysStep: 5);
 
                   }
                 }
@@ -67,19 +54,19 @@ class ChartCard extends StatelessWidget {
   const ChartCard({super.key, required this.data, required this.daysStep});
 
   // latest cycle is last element
-  final List<List<double>> data;
+  final List<List<Weight>> data;
   final int daysStep;
 
   @override
   Widget build(BuildContext context) {
-    final chartItems = data.map((list) => list.map((e) => ChartItem(e *1000)).toList()).toList();
+    final chartItems = data.map((list) => list.map((e) => ChartItem(e.weight *1000)).toList()).toList();
 
     var min = 130.0;
     var max = 0.0;
     for (final list in data) {
       for (final weight in list) {
-        if (weight < min) min = weight;
-        if (weight > max) max = weight;
+        if (weight.weight < min) min = weight.weight;
+        if (weight.weight > max) max = weight.weight;
       }
     }
 
