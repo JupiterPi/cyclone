@@ -94,10 +94,13 @@ class ChartCard extends StatelessWidget {
       }
     }
 
+    listColorAlpha(int i) {
+      final length = data.length - 1;
+      return interpolate(255, 100, ( (length-i) / length ));
+    }
     listColor(int i) {
       if (i == data.length - 1) return Theme.of(context).colorScheme.error;
-      final length = data.length - 1;
-      return Theme.of(context).colorScheme.primary.withAlpha(interpolate(255, 100, ( (length-i) / length )));
+      return Theme.of(context).colorScheme.primary.withAlpha(listColorAlpha(i));
     }
 
     return Column(
@@ -112,6 +115,9 @@ class ChartCard extends StatelessWidget {
                   listIndex: i,
                   lineWidth: 2,
                   lineColor: listColor(i),
+                  gradient: LinearGradient(colors: [
+                    for (final weight in data[i]) weight.isApproximated ? Colors.black.withAlpha(listColorAlpha(i)) : listColor(i)
+                  ]),
                 ),
               ],
               backgroundDecorations: [
