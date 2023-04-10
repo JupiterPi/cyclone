@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../theme/color_schemes.dart';
+const textFont = GoogleFonts.workSans;
+const displayFont = GoogleFonts.crimsonText;
 
 class CycloneApp extends StatelessWidget {
   const CycloneApp({super.key});
@@ -16,19 +17,19 @@ class CycloneApp extends StatelessWidget {
       title: 'Cyclone',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: lightColorScheme,
-        fontFamily: GoogleFonts.workSans().fontFamily,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.deepPurple,
+          accentColor: Colors.deepPurpleAccent,
+          cardColor: Colors.deepPurple[50],
+          brightness: Brightness.light,
+        ),
+        appBarTheme: const AppBarTheme(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.deepPurple,
+        ),
+        fontFamily: textFont().fontFamily,
+        brightness: Brightness.light,
       ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: darkColorScheme,
-        fontFamily: GoogleFonts.workSans().fontFamily,
-      ),
-      /*darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: darkColorScheme,
-        fontFamily: GoogleFonts.workSans().fontFamily,
-      ),*/
       routerConfig: _router,
     );
   }
@@ -57,8 +58,8 @@ class CycloneScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "Fluctuweight",
-            style: GoogleFonts.crimsonText(fontSize: 28)
+          "Fluctuweight",
+          style: textFont(fontSize: 28)
         ),
       ),
       body: _body,

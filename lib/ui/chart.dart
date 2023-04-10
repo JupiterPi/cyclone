@@ -1,6 +1,8 @@
 import 'package:charts_painter/chart.dart';
 import 'package:cyclone/data/weights.dart';
 import 'package:cyclone/main.dart';
+import 'package:cyclone/ui/cyclone_ui.dart';
+import 'package:cyclone/ui/ui-main.dart';
 import 'package:cyclone/util.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -97,46 +99,59 @@ class ChartCard extends StatelessWidget {
       final length = data.length - 1;
       return interpolate(255, 100, ( (length-i) / length ));
     }
+    listGreyAlpha(int i) {
+      return (listColorAlpha(i) * 0.5).round();
+    }
     listColor(int i) {
-      if (i == data.length - 1) return Theme.of(context).colorScheme.error;
+      if (i == data.length - 1) return Theme.of(context).colorScheme.secondary;
       return Theme.of(context).colorScheme.primary.withAlpha(listColorAlpha(i));
     }
 
     return Column(
       children: [
-        Chart(
-          state: ChartState(
-            data: chartData,
-            itemOptions: BubbleItemOptions(maxBarWidth: 0),
-            foregroundDecorations: [
-              for (var i = 0; i < data.length; i++) SparkLineDecoration(
-                listIndex: i,
-                lineWidth: 2,
-                lineColor: listColor(i),
-                gradient: LinearGradient(colors: [
-                  for (final weight in data[i]) weight.isApproximated ? Colors.black.withAlpha(listColorAlpha(i)) : listColor(i)
-                ]),
-              ),
-            ],
-            backgroundDecorations: [
-              HorizontalAxisDecoration(
-                axisStep: 0.5 *1000,
-                showValues: true,
-                axisValue: (value) => "${(value /1000).toStringAsFixed(1)} kg",
-                legendFontStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13),
-              ),
-              VerticalAxisDecoration(
-                axisStep: verticalAxisStep.toDouble(),
-                showValues: true,
-                valueFromIndex: verticalAxisLabel,
-                endWithChart: true,
-                legendFontStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-                valuesAlign: TextAlign.left,
-              ),
-            ],
+        CycloneCard(
+          child: Chart(
+            state: ChartState(
+              data: chartData,
+              itemOptions: BubbleItemOptions(maxBarWidth: 0),
+              foregroundDecorations: [
+                for (var i = 0; i < data.length; i++) SparkLineDecoration(
+                  listIndex: i,
+                  lineWidth: 2,
+                  lineColor: listColor(i),
+                  gradient: LinearGradient(colors: [
+                    for (final weight in data[i]) weight.isApproximated ? Colors.black.withAlpha(listGreyAlpha(i)) : listColor(i)
+                  ]),
+                ),
+              ],
+              backgroundDecorations: [
+                HorizontalAxisDecoration(
+                  axisStep: 0.5 *1000,
+                  showValues: true,
+                  endWithChart: true,
+                  axisValue: (value) => "${(value /1000).toStringAsFixed(1)} kg",
+                  legendFontStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontSize: 13,
+                    fontFamily: textFont().fontFamily,
+                  ),
+                ),
+                VerticalAxisDecoration(
+                  axisStep: verticalAxisStep.toDouble(),
+                  showValues: true,
+                  valueFromIndex: verticalAxisLabel,
+                  endWithChart: true,
+                  legendFontStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontFamily: textFont().fontFamily,
+                  ),
+                  valuesAlign: TextAlign.left,
+                ),
+              ],
+            ),
+            height: 200,
+            width: 500,
           ),
-          height: 200,
-          width: 500,
         ),
         const SizedBox(height: 5),
         Row(
