@@ -1,7 +1,6 @@
 import 'package:charts_painter/chart.dart';
 import 'package:cyclone/data/weights.dart';
 import 'package:cyclone/main.dart';
-import 'package:cyclone/ui/cyclone_ui.dart';
 import 'package:cyclone/util.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -105,41 +104,39 @@ class ChartCard extends StatelessWidget {
 
     return Column(
       children: [
-        CycloneCard(
-          child: Chart(
-            state: ChartState(
-              data: chartData,
-              itemOptions: BubbleItemOptions(maxBarWidth: 0),
-              foregroundDecorations: [
-                for (var i = 0; i < data.length; i++) SparkLineDecoration(
-                  listIndex: i,
-                  lineWidth: 2,
-                  lineColor: listColor(i),
-                  gradient: LinearGradient(colors: [
-                    for (final weight in data[i]) weight.isApproximated ? Colors.black.withAlpha(listColorAlpha(i)) : listColor(i)
-                  ]),
-                ),
-              ],
-              backgroundDecorations: [
-                HorizontalAxisDecoration(
-                  axisStep: 0.5 *1000,
-                  showValues: true,
-                  axisValue: (value) => "${(value /1000).toStringAsFixed(1)} kg",
-                  legendFontStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13),
-                ),
-                VerticalAxisDecoration(
-                  axisStep: verticalAxisStep.toDouble(),
-                  showValues: true,
-                  valueFromIndex: verticalAxisLabel,
-                  endWithChart: true,
-                  legendFontStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-                  valuesAlign: TextAlign.left,
-                ),
-              ],
-            ),
-            height: 200,
-            width: 500,
+        Chart(
+          state: ChartState(
+            data: chartData,
+            itemOptions: BubbleItemOptions(maxBarWidth: 0),
+            foregroundDecorations: [
+              for (var i = 0; i < data.length; i++) SparkLineDecoration(
+                listIndex: i,
+                lineWidth: 2,
+                lineColor: listColor(i),
+                gradient: LinearGradient(colors: [
+                  for (final weight in data[i]) weight.isApproximated ? Colors.black.withAlpha(listColorAlpha(i)) : listColor(i)
+                ]),
+              ),
+            ],
+            backgroundDecorations: [
+              HorizontalAxisDecoration(
+                axisStep: 0.5 *1000,
+                showValues: true,
+                axisValue: (value) => "${(value /1000).toStringAsFixed(1)} kg",
+                legendFontStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13),
+              ),
+              VerticalAxisDecoration(
+                axisStep: verticalAxisStep.toDouble(),
+                showValues: true,
+                valueFromIndex: verticalAxisLabel,
+                endWithChart: true,
+                legendFontStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                valuesAlign: TextAlign.left,
+              ),
+            ],
           ),
+          height: 200,
+          width: 500,
         ),
         const SizedBox(height: 5),
         Row(

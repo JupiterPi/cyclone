@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../theme/color_schemes.dart';
+
 class CycloneApp extends StatelessWidget {
   const CycloneApp({super.key});
 
@@ -14,13 +16,19 @@ class CycloneApp extends StatelessWidget {
       title: 'Cyclone',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple, brightness: Brightness.light),
-        appBarTheme: const AppBarTheme(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.deepPurple,
-        ),
+        colorScheme: lightColorScheme,
         fontFamily: GoogleFonts.workSans().fontFamily,
       ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+        fontFamily: GoogleFonts.workSans().fontFamily,
+      ),
+      /*darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+        fontFamily: GoogleFonts.workSans().fontFamily,
+      ),*/
       routerConfig: _router,
     );
   }
