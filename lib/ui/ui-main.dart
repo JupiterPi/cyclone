@@ -1,4 +1,4 @@
-import 'package:cyclone/ui/chart.dart';
+import 'package:cyclone/ui/chart/page.dart';
 import 'package:cyclone/ui/home.dart';
 import 'package:cyclone/ui/measurements_list.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +59,7 @@ class CycloneScaffold extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Fluctuweight",
-          style: textFont(fontSize: 28)
+          style: displayFont(fontSize: 28)
         ),
       ),
       body: _body,

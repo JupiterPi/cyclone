@@ -37,6 +37,7 @@ class Date {
   Date.current() : this.fromDateTime(DateTime.now());
 
   Date addDays(int days) => Date.fromDateTime(DateTime(year, month, day).add(Duration(days: days)));
+  Date subtractDays(int days) => Date.fromDateTime(DateTime(year, month, day).subtract(Duration(days: days)));
 
   int toDoubleForComparison() => toDateTime().millisecondsSinceEpoch;
 
