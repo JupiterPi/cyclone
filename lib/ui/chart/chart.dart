@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'colors_legend.dart';
 
-class ChartCard extends StatelessWidget {
+class ChartCard extends StatefulWidget {
   const ChartCard({super.key, required this.data, required this.daysStep});
 
   // latest cycle is last element
@@ -14,12 +14,23 @@ class ChartCard extends StatelessWidget {
   final int daysStep;
 
   @override
+  State createState() => _ChartCardState();
+}
+
+class _ChartCardState extends State<ChartCard> {
+  int? _listSelected;
+
+  void _setListSelected(int? index) => setState(() {
+    _listSelected = index;
+  });
+
+  @override
   Widget build(BuildContext context) {
-    final chartItems = data.map((list) => list.map((e) => ChartItem(e.weight *1000)).toList()).toList();
+    final chartItems = widget.data.map((list) => list.map((e) => ChartItem(e.weight *1000)).toList()).toList();
 
     var min = 130.0;
     var max = 0.0;
-    for (final list in data) {
+    for (final list in widget.data) {
       for (final weight in list) {
         if (weight.weight < min) min = weight.weight;
         if (weight.weight > max) max = weight.weight;
@@ -40,14 +51,14 @@ class ChartCard extends StatelessWidget {
     }
 
     listColorAlpha(int i) {
-      final length = data.length - 1;
+      final length = widget.data.length - 1;
       return interpolate(255, 100, ( (length-i) / length ));
     }
     listGreyAlpha(int i) {
       return (listColorAlpha(i) * 0.5).round();
     }
     listColor(int i) {
-      if (i == data.length - 1) return const Color(0xffd5116a);
+      if (i == widget.data.length - 1) return const Color(0xffd5116a);
       return Theme.of(context).colorScheme.primary.withAlpha(listColorAlpha(i));
     }
 
@@ -62,12 +73,12 @@ class ChartCard extends StatelessWidget {
                 data: chartData,
                 itemOptions: BubbleItemOptions(maxBarWidth: 0),
                 foregroundDecorations: [
-                  for (var i = 0; i < data.length; i++) SparkLineDecoration(
+                  for (var i = 0; i < widget.data.length; i++) SparkLineDecoration(
                     listIndex: i,
                     lineWidth: 2,
                     lineColor: listColor(i),
                     gradient: LinearGradient(colors: [
-                      for (final weight in data[i]) weight.isApproximated ? Colors.black.withAlpha(listGreyAlpha(i)) : listColor(i)
+                      for (final weight in widget.data[i]) weight.isApproximated ? Colors.black.withAlpha(listGreyAlpha(i)) : listColor(i)
                     ]),
                   ),
                 ],
@@ -106,10 +117,10 @@ class ChartCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             ChartColorsLegend(
-              length: data.length,
-              indexSelected: 4,
+              length: widget.data.length,
+              indexSelected: _listSelected,
               listColor: listColor,
-              onSelect: (index){},
+              onSelect: _setListSelected,
             ),
           ],
         ),

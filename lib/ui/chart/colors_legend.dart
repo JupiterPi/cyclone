@@ -6,7 +6,7 @@ class ChartColorsLegend extends StatelessWidget {
   final int length;
   final int? indexSelected;
   final Color Function(int) listColor;
-  final void Function(int) onSelect;
+  final void Function(int?) onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ChartColorsLegend extends StatelessWidget {
       direction: Axis.vertical,
       children: [
         for (var i = 0; i < length; i++) InkWell(
-          onTap: () => onSelect(i),
+          onTap: () => onSelect(indexSelected == i ? null : i),
           borderRadius: BorderRadius.circular((25+10)/2),
           child: Padding(
             padding: const EdgeInsets.all(5),
@@ -40,12 +40,13 @@ class ChartColorsLegend extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: listColor(i),
                   ),
-                  child: null,
+                  child: (indexSelected == i ? const Icon(Icons.clear, color: Colors.white, size: 15) : null),
                 ),
                 const SizedBox(width: 5),
                 Text(
                   legendListLabel(i, length),
-                  style: TextStyle(decoration: indexSelected == i ? TextDecoration.underline : TextDecoration.none),
+                  //style: TextStyle(decoration: indexSelected == i ? TextDecoration.underline : TextDecoration.none),
+                  style: TextStyle(fontWeight: indexSelected == i ? FontWeight.w600 : FontWeight.normal),
                 ),
                 const SizedBox(width: 5),
               ],
