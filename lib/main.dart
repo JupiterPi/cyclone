@@ -1,4 +1,5 @@
 import 'package:cyclone/data/measurements.dart';
+import 'package:cyclone/data/periods.dart';
 import 'package:cyclone/data/weights.dart';
 import 'package:cyclone/state.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,11 @@ void main() async {
     version: 1,
     onCreate: (db, version) async {
       await Measurement.createTable(db);
+      await Period.createTable(db);
     },
   );
   getIt.registerLazySingleton<MeasurementsService>(() => MeasurementsServiceMock());
+  getIt.registerLazySingleton<PeriodsService>(() => PeriodsServiceMock());
 
   getIt.registerLazySingleton<WeightsService>(() => WeightsServiceImpl());
 

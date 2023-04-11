@@ -5,6 +5,7 @@ import 'package:cyclone/ui/ui-main.dart';
 import 'package:cyclone/util.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/periods.dart';
 import '../../main.dart';
 import 'colors_legend.dart';
 
@@ -30,22 +31,19 @@ class _CartCardState extends State<ChartCard> {
     if (_daysShown > 30) _daysShown = 30;
   });
 
-  static Future<List<List<Weight>>> _getMultipleWeights(List<Date> startDates, int days) async {
-    var weights = <List<Weight>>[];
-    for (var startDate in startDates) {
-      weights.add(await getIt.get<WeightsService>().getWeights(startDate, days));
+  static Future<List<List<Weight>>> _getWeights(int cyclesShown, int daysShown) async {
+    final periods = await getIt.get<PeriodsService>().findPeriods();
+    final startDates = <Date>[];
+    for (int i = 1; i <= cyclesShown; i++) {
+      final lastPeriod = periods.removeLast();
+      startDates.add(lastPeriod.date);
     }
-    return weights;
+    return getIt.get<WeightsService>().getMultipleWeights(startDates.reversed.toList(), daysShown);
   }
 
   @override
   Widget build(BuildContext context) {
-    final initialDate = Date.current();
-    final startDates = <Date>[];
-    for (int i = 1; i <= _cyclesShown; i++) {
-      startDates.add(initialDate.subtractDays(i * 10));
-    }
-    final future = _getMultipleWeights(startDates.reversed.toList(), _daysShown);
+    final future = _getWeights(_cyclesShown, _daysShown);
 
     return Card(
       child: Padding(
@@ -165,6 +163,7 @@ class _ChartCardContentState extends State<ChartCardContent> {
                       )
                   )
                 ]),
+                smoothPoints: true,
               ),
             ],
             backgroundDecorations: [

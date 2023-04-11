@@ -14,6 +14,7 @@ enum WeightType { real, approximated, extrapolated }
 
 abstract class WeightsService {
   Future<List<Weight>> getWeights(Date startDate, int days);
+  Future<List<List<Weight>>> getMultipleWeights(List<Date> startDates, int days);
 }
 
 const _lookaheadMax = 14;
@@ -66,6 +67,15 @@ class WeightsServiceImpl extends WeightsService {
         lastRealMeasurement = measurement;
         weights.add(Weight(weight: measurement.weight, type: WeightType.real));
       }
+    }
+    return weights;
+  }
+
+  @override
+  Future<List<List<Weight>>> getMultipleWeights(List<Date> startDates, int days) async {
+    var weights = <List<Weight>>[];
+    for (var startDate in startDates) {
+      weights.add(await getWeights(startDate, days));
     }
     return weights;
   }
