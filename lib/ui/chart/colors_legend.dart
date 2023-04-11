@@ -1,3 +1,4 @@
+import 'package:cyclone/ui/chart/chart_controls.dart';
 import 'package:flutter/material.dart';
 
 class ChartColorsLegend extends StatelessWidget {
@@ -21,39 +22,44 @@ class ChartColorsLegend extends StatelessWidget {
       }
     }
 
-    return Wrap(
-      spacing: 3,
-      direction: Axis.vertical,
-      children: [
-        for (var i = 0; i < length; i++) InkWell(
-          onTap: () => onSelect(indexSelected == i ? null : i),
-          borderRadius: BorderRadius.circular((25+10)/2),
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 25,
-                  height: 25,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: listColor(i),
-                  ),
-                  child: (indexSelected == i ? const Icon(Icons.clear, color: Colors.white, size: 15) : null),
+    return ChartControlCard(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Wrap(
+          spacing: 3,
+          direction: Axis.vertical,
+          children: [
+            for (var i = 0; i < length; i++) InkWell(
+              onTap: () => onSelect(indexSelected == i ? null : i),
+              borderRadius: BorderRadius.circular((25+10)/2),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: listColor(i),
+                      ),
+                      child: (indexSelected == i ? const Icon(Icons.clear, color: Colors.white, size: 15) : null),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      legendListLabel(i, length),
+                      //style: TextStyle(decoration: indexSelected == i ? TextDecoration.underline : TextDecoration.none),
+                      style: TextStyle(fontWeight: indexSelected == i ? FontWeight.w600 : FontWeight.normal),
+                    ),
+                    const SizedBox(width: 5),
+                  ],
                 ),
-                const SizedBox(width: 5),
-                Text(
-                  legendListLabel(i, length),
-                  //style: TextStyle(decoration: indexSelected == i ? TextDecoration.underline : TextDecoration.none),
-                  style: TextStyle(fontWeight: indexSelected == i ? FontWeight.w600 : FontWeight.normal),
-                ),
-                const SizedBox(width: 5),
-              ],
+              ),
             ),
-          ),
+          ].reversed.toList(),
         ),
-      ].reversed.toList(),
+      ),
     );
   }
 }
