@@ -20,7 +20,7 @@ class _CartCardState extends State<ChartCard> {
   int _cyclesShown = 2;
   void _addCyclesShown(int delta) => setState(() {
     _cyclesShown = _cyclesShown + delta;
-    if (_cyclesShown < 1) _cyclesShown = 1;
+    if (_cyclesShown < 2) _cyclesShown = 2;
     if (_cyclesShown > 5) _cyclesShown = 5;
   });
 
