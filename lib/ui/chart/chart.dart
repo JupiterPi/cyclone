@@ -125,9 +125,9 @@ class _ChartCardContentState extends State<ChartCardContent> {
     }
 
     listColorAlpha(int i) {
-      final length = widget.data.length - 1;
+      final length = widget.data.length - 2;
       if (length == 0) return 255;
-      return interpolate(255, 100, ( (length-i) / length ));
+      return interpolate(100, 255, ( i / length ));
     }
     listGreyAlpha(int i) {
       return (listColorAlpha(i) * 0.3).round();
@@ -153,7 +153,9 @@ class _ChartCardContentState extends State<ChartCardContent> {
             foregroundDecorations: [
               for (var i = 0; i < widget.data.length; i++) SparkLineDecoration(
                 listIndex: i,
-                lineWidth: 2,
+                lineWidth: 3.5,
+                stretchLine: true,
+                smoothPoints: true,
                 gradient: LinearGradient(colors: [
                   for (final weight in widget.data[i]) applyAlphaForSelection(i,
                       weight.type == WeightType.real ? listColor(i) : (
@@ -163,7 +165,6 @@ class _ChartCardContentState extends State<ChartCardContent> {
                       )
                   )
                 ]),
-                smoothPoints: true,
               ),
             ],
             backgroundDecorations: [
