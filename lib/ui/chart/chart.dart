@@ -132,7 +132,7 @@ class _ChartCardContentState extends State<ChartCardContent> {
       return interpolate(255, 100, ( (length-i) / length ));
     }
     listGreyAlpha(int i) {
-      return (listColorAlpha(i) * 0.5).round();
+      return (listColorAlpha(i) * 0.3).round();
     }
     listColor(int i) {
       if (i == widget.data.length - 1) return const Color(0xffd5116a);
@@ -157,7 +157,13 @@ class _ChartCardContentState extends State<ChartCardContent> {
                 listIndex: i,
                 lineWidth: 2,
                 gradient: LinearGradient(colors: [
-                  for (final weight in widget.data[i]) applyAlphaForSelection(i, weight.isApproximated ? Colors.black.withAlpha(listGreyAlpha(i)) : listColor(i))
+                  for (final weight in widget.data[i]) applyAlphaForSelection(i,
+                      weight.type == WeightType.real ? listColor(i) : (
+                          weight.type == WeightType.approximated
+                              ? Colors.black.withAlpha(listGreyAlpha(i))
+                              : Colors.white.withAlpha(0)
+                      )
+                  )
                 ]),
               ),
             ],

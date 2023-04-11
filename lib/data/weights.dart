@@ -4,11 +4,13 @@ import 'package:cyclone/main.dart';
 import '../util.dart';
 
 class Weight {
-  const Weight({required this.weight, required this.isApproximated});
+  const Weight({required this.weight, required this.type});
 
   final double weight;
-  final bool isApproximated;
+  final WeightType type;
 }
+
+enum WeightType { real, approximated, extrapolated }
 
 abstract class WeightsService {
   Future<List<Weight>> getWeights(Date startDate, int days);
@@ -27,6 +29,7 @@ class WeightsServiceImpl extends WeightsService {
       final matches = measurements.where((measurement) => measurement.date == date);
 
       if (matches.isEmpty) {
+        var isExtrapolated = false;
 
         // delete nextRealMeasurement if expired
         if (nextRealMeasurement != null && nextRealMeasurement.date.toDoubleForComparison() > date.toDoubleForComparison()) nextRealMeasurement = null;
@@ -40,6 +43,7 @@ class WeightsServiceImpl extends WeightsService {
               if (lookaheadDays > _lookaheadMax) {
                 // create flat approximation
                 nextRealMeasurement = Measurement(date: date.addDays(_lookaheadMax), weight: (lastRealMeasurement?.weight ?? 0));
+                isExtrapolated = true;
                 break;
               } else {
                 continue;
@@ -55,12 +59,12 @@ class WeightsServiceImpl extends WeightsService {
         final lastRealComparisonValue = lastRealMeasurement!.date.toDoubleForComparison();
         final percent = ( date.toDoubleForComparison() - lastRealComparisonValue ) / ( nextRealMeasurement.date.toDoubleForComparison() - lastRealComparisonValue );
         final weight = lastRealMeasurement.weight + (nextRealMeasurement.weight - lastRealMeasurement.weight) * percent;
-        weights.add(Weight(weight: weight, isApproximated: true));
+        weights.add(Weight(weight: weight, type: (isExtrapolated ? WeightType.extrapolated : WeightType.approximated)));
 
       } else {
         final measurement = matches.first;
         lastRealMeasurement = measurement;
-        weights.add(Weight(weight: measurement.weight, isApproximated: false));
+        weights.add(Weight(weight: measurement.weight, type: WeightType.real));
       }
     }
     return weights;
