@@ -21,7 +21,7 @@ class _CartCardState extends State<ChartCard> {
   void _addCyclesShown(int delta) => setState(() {
     _cyclesShown = _cyclesShown + delta;
     if (_cyclesShown < 2) _cyclesShown = 2;
-    if (_cyclesShown > 5) _cyclesShown = 5;
+    if (_cyclesShown > 4) _cyclesShown = 4;
   });
 
   int _daysShown = 10;
@@ -35,6 +35,7 @@ class _CartCardState extends State<ChartCard> {
     final periods = await getIt.get<PeriodsService>().findPeriods();
     final startDates = <Date>[];
     for (int i = 1; i <= cyclesShown; i++) {
+      if (periods.isEmpty) break;
       final lastPeriod = periods.removeLast();
       startDates.add(lastPeriod.date);
     }

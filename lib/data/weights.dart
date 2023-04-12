@@ -8,6 +8,9 @@ class Weight {
 
   final double weight;
   final WeightType type;
+
+  @override
+  String toString() => "Weight{weight: $weight, $type}";
 }
 
 enum WeightType { real, approximated, extrapolated }
@@ -22,35 +25,36 @@ class WeightsServiceImpl extends WeightsService {
   @override
   Future<List<Weight>> getWeights(Date startDate, int days) async {
     final measurements = await getIt.get<MeasurementsService>().findMeasurements();
+    measurements.forEach(print);
     final weights = <Weight>[];
     Measurement? lastRealMeasurement;
     Measurement? nextRealMeasurement;
+    var nextRealMeasurementIsExtrapolated = false;
     for (var day = 0; day < days; day++) {
       final date = startDate.addDays(day);
       final matches = measurements.where((measurement) => measurement.date == date);
 
       if (matches.isEmpty) {
-        var isExtrapolated = false;
-
         // delete nextRealMeasurement if expired
-        if (nextRealMeasurement != null && nextRealMeasurement.date.toDoubleForComparison() > date.toDoubleForComparison()) nextRealMeasurement = null;
+        if (nextRealMeasurement != null && nextRealMeasurement.date.toDoubleForComparison() < date.toDoubleForComparison()) nextRealMeasurement = null;
 
         if (nextRealMeasurement == null) {
           // scan for nextRealMeasurement
-          for (var lookaheadDays = 0; true; lookaheadDays++) {
+          for (var lookaheadDays = 1; true; lookaheadDays++) {
             final lookaheadDate = date.addDays(lookaheadDays);
             final lookaheadMatches = measurements.where((measurement) => measurement.date == lookaheadDate);
             if (lookaheadMatches.isEmpty) {
               if (lookaheadDays > _lookaheadMax) {
                 // create flat approximation
                 nextRealMeasurement = Measurement(date: date.addDays(_lookaheadMax), weight: (lastRealMeasurement?.weight ?? 0));
-                isExtrapolated = true;
+                nextRealMeasurementIsExtrapolated = true;
                 break;
               } else {
                 continue;
               }
             } else {
               nextRealMeasurement = lookaheadMatches.first;
+              nextRealMeasurementIsExtrapolated = false;
               break;
             }
           }
@@ -60,7 +64,7 @@ class WeightsServiceImpl extends WeightsService {
         final lastRealComparisonValue = lastRealMeasurement!.date.toDoubleForComparison();
         final percent = ( date.toDoubleForComparison() - lastRealComparisonValue ) / ( nextRealMeasurement.date.toDoubleForComparison() - lastRealComparisonValue );
         final weight = lastRealMeasurement.weight + (nextRealMeasurement.weight - lastRealMeasurement.weight) * percent;
-        weights.add(Weight(weight: weight, type: (isExtrapolated ? WeightType.extrapolated : WeightType.approximated)));
+        weights.add(Weight(weight: weight, type: (nextRealMeasurementIsExtrapolated ? WeightType.extrapolated : WeightType.approximated)));
 
       } else {
         final measurement = matches.first;
