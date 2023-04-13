@@ -1,6 +1,6 @@
 import 'package:charts_painter/chart.dart';
 import 'package:cyclone/data/weights.dart';
-import 'package:cyclone/ui/chart/chart_controls.dart';
+import 'package:cyclone/ui/daily_chart/chart_controls.dart';
 import 'package:cyclone/ui/ui-main.dart';
 import 'package:cyclone/util.dart';
 import 'package:flutter/material.dart';

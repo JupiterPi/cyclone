@@ -1,4 +1,4 @@
-import 'package:cyclone/ui/chart/chart_controls.dart';
+import 'package:cyclone/ui/daily_chart/chart_controls.dart';
 import 'package:flutter/material.dart';
 
 class ChartColorsLegend extends StatelessWidget {

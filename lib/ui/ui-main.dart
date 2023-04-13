@@ -1,4 +1,5 @@
-import 'package:cyclone/ui/chart/page.dart';
+import 'package:cyclone/ui/cyclewise_chart/page.dart';
+import 'package:cyclone/ui/daily_chart/page.dart';
 import 'package:cyclone/ui/home.dart';
 import 'package:cyclone/ui/measurements_list.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,8 @@ final _router = GoRouter(
           routes: [
             GoRoute(path: "/", builder: (context, state) => const HomePage()),
             GoRoute(path: "/measurements", builder: (context, state) => const MeasurementsListPage()),
-            GoRoute(path: "/chart", builder: (context, state) => const ChartPage()),
+            GoRoute(path: "/daily_chart", builder: (context, state) => const DailyChartPage()),
+            GoRoute(path: "/cyclewise_chart", builder: (context, state) => const CyclewiseChartPage()),
           ]
       )
     ]

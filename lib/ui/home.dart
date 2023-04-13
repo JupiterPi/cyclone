@@ -1,7 +1,8 @@
 import 'package:cyclone/data/measurements.dart';
 import 'package:cyclone/state.dart';
-import 'package:cyclone/ui/chart/page.dart';
+import 'package:cyclone/ui/cyclewise_chart/page.dart';
 import 'package:cyclone/ui/cyclone_ui.dart';
+import 'package:cyclone/ui/daily_chart/page.dart';
 import 'package:cyclone/ui/enter_weight.dart';
 import 'package:cyclone/ui/measurements_list.dart';
 import 'package:cyclone/util.dart';
@@ -44,10 +45,18 @@ class HomePage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => const ChartPage()
+                          builder: (context) => const DailyChartPage()
                       ));
                     },
-                    child: const Text("Chart"),
+                    child: const Text("Daily Chart"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => const CyclewiseChartPage()
+                      ));
+                    },
+                    child: const Text("Cyclewise Chart"),
                   ),
                 ],
               ),
