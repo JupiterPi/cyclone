@@ -2,6 +2,7 @@ import 'package:cyclone/ui/chart/page.dart';
 import 'package:cyclone/ui/home.dart';
 import 'package:cyclone/ui/measurements_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,6 +14,13 @@ class CycloneApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // https://stackoverflow.com/a/50884081/13164753
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]);
+
     return MaterialApp.router(
       title: 'Cyclone',
       theme: ThemeData(
@@ -32,6 +40,7 @@ class CycloneApp extends StatelessWidget {
       ),
       routerConfig: _router,
     );
+
   }
 }
 
