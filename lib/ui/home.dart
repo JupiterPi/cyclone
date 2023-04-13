@@ -1,11 +1,12 @@
 import 'package:cyclone/data/measurements.dart';
 import 'package:cyclone/state.dart';
+import 'package:cyclone/ui/chart/page.dart';
 import 'package:cyclone/ui/cyclone_ui.dart';
 import 'package:cyclone/ui/enter_weight.dart';
+import 'package:cyclone/ui/measurements_list.dart';
 import 'package:cyclone/util.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -32,27 +33,19 @@ class HomePage extends StatelessWidget {
               Wrap(
                 spacing: 10,
                 children: [
-                  /*ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening dashboard..."), duration: Duration(seconds: 1),));
-                    },
-                    child: const Text("Dashboard"),
-                  ),
                   ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Opening calendar view..."), duration: Duration(seconds: 1)));
-                    },
-                    child: const Text("Calendar"),
-                  ),*/
-                  ElevatedButton(
-                    onPressed: () {
-                      context.go("/measurements");
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => const MeasurementsListPage()
+                      ));
                     },
                     child: const Text("Measurements"),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      context.go("/chart");
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => const ChartPage()
+                      ));
                     },
                     child: const Text("Chart"),
                   ),

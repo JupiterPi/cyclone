@@ -1,6 +1,5 @@
 import 'package:cyclone/ui/chart/chart.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ChartPage extends StatelessWidget {
   const ChartPage({super.key});
@@ -13,7 +12,12 @@ class ChartPage extends StatelessWidget {
           children: [
             const ChartCard(),
             const SizedBox(height: 8),
-            ElevatedButton(onPressed: () { context.go("/"); }, child: const Text("Back")),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Back"),
+            ),
           ],
         )
     );

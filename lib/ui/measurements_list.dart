@@ -1,7 +1,6 @@
 import 'package:cyclone/state.dart';
 import 'package:cyclone/ui/cyclone_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class MeasurementsListPage extends StatelessWidget {
@@ -41,7 +40,7 @@ class MeasurementsListPage extends StatelessWidget {
             const SizedBox(width: 10),
             ElevatedButton(
                 onPressed: () {
-                  context.go("/");
+                  Navigator.pop(context);
                 },
                 child: const Text("Back")
             ),
